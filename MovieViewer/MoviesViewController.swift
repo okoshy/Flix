@@ -18,7 +18,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var tableView: UITableView!
     
     var movies: [NSDictionary]?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let refreshControl = UIRefreshControl()
@@ -46,7 +46,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                 if let responseDictionary = try! NSJSONSerialization.JSONObjectWithData(
                     data, options:[]) as? NSDictionary {
                     print("response: \(responseDictionary)")
-                
+                    
                     self.movies = responseDictionary["results"] as? [NSDictionary]
                     self.tableView.reloadData()
                 }
@@ -54,10 +54,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
             }
         })
         task.resume()
-
+        
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -65,7 +65,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let movies = movies {
-          return movies.count
+            return movies.count
         }else {
             return 0
         }
@@ -92,7 +92,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         cell.titleLabel.text = title
         cell.overviewLabel.text = overview
         cell.posterView.setImageWithURL(imageURL!)
-
+        
         
         print("row\(indexPath.row)")
         return cell
@@ -158,13 +158,13 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         task.resume()
     }
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
+    
 }
