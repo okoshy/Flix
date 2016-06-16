@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E56AE5C1D13483C004A8794 /* ColorCellCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E56AE5B1D13483C004A8794 /* ColorCellCollectionViewCell.swift */; };
 		3EAC707B1D11BA9000F810F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAC707A1D11BA9000F810F7 /* AppDelegate.swift */; };
 		3EAC70801D11BA9000F810F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3EAC707E1D11BA9000F810F7 /* Main.storyboard */; };
 		3EAC70821D11BA9000F810F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EAC70811D11BA9000F810F7 /* Assets.xcassets */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		0C2B0CB305505F9E79802B92 /* Pods_MovieViewer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MovieViewer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E56AE5B1D13483C004A8794 /* ColorCellCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorCellCollectionViewCell.swift; sourceTree = "<group>"; };
 		3EAC70771D11BA9000F810F7 /* MovieViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MovieViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EAC707A1D11BA9000F810F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3EAC707F1D11BA9000F810F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				3EAC70BA1D11F09700F810F7 /* MoviesViewController.swift */,
+				3E56AE5B1D13483C004A8794 /* ColorCellCollectionViewCell.swift */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 			files = (
 				3EAC707B1D11BA9000F810F7 /* AppDelegate.swift in Sources */,
 				3EAC70BB1D11F09700F810F7 /* MoviesViewController.swift in Sources */,
+				3E56AE5C1D13483C004A8794 /* ColorCellCollectionViewCell.swift in Sources */,
 				3EAC70BE1D1203A000F810F7 /* MovieViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
