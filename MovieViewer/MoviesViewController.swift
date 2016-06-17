@@ -11,20 +11,32 @@ import AFNetworking
 import MBProgressHUD
 
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDelegate {
+class MoviesViewController: UIViewController, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDelegate, UISearchBarDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var searchBar: UISearchBar!
+    
+    
+    
     var movies: [NSDictionary]?
     var refreshControl = UIRefreshControl()
+    var filteredData: [NSDictionary]!
+
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        searchBar.delegate = self
         tableView.dataSource = self
         tableView.delegate = self
         collectionView.dataSource = self
         collectionView.delegate = self
+        tableView.dataSource = self
+        searchBar.delegate = self
+        filteredData = movies
         
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
@@ -58,8 +70,10 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
                     print("response: \(responseDictionary)")
                     
                     self.movies = responseDictionary["results"] as? [NSDictionary]
+                    self.filteredData = self.movies
                     self.tableView.reloadData()
                     self.collectionView.reloadData()
+                   
                 }
                
             }
@@ -77,8 +91,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let movies = movies {
-            return movies.count
+        if let filteredData = filteredData {
+            return filteredData.count
         }else {
             return 0
         }
@@ -86,11 +100,12 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
         
     }
     
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("MovieCell", forIndexPath: indexPath) as! MovieViewCell
         
-        let movie = movies![indexPath.row]
+        let movie = filteredData![indexPath.row]
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
         
@@ -113,9 +128,9 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let movies = movies {
+        if let filteredData = filteredData {
 //            print(movies.count)
-            return movies.count
+            return filteredData.count
         }else {
 //            print(0)
             return 0
@@ -126,7 +141,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PosterCell", forIndexPath: indexPath) as! PosterCell
         
-        let movie = movies![indexPath.row]
+        let movie = filteredData![indexPath.row]
         let title = movie["title"] as! String
         let overview = movie["overview"] as! String
         
@@ -139,7 +154,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
         
         
         cell.titleLabel.text = title
-        cell.titleLabel.text = overview
+        //cell.titleLabel.text = overview
         print("rendering")
         cell.pictureView.setImageWithURL(imageURL!)
         
@@ -148,6 +163,22 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
         return cell
         
     }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchText.isEmpty {
+            filteredData = movies
+        } else {
+        filteredData = movies!.filter({(dataString: NSDictionary) -> Bool in
+            let title = dataString["title"] as! String
+
+            return title.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+        })
+        tableView.reloadData()
+        collectionView.reloadData()
+        }
+    }
+
     
     func loadDataFromNetwork(refreshControl: UIRefreshControl) {
         
@@ -208,6 +239,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
         });
         task.resume()
     }
+    
+    
     
    
   
