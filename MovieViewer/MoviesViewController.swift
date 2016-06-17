@@ -39,8 +39,8 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
         filteredData = movies
         
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        tableView.insertSubview(refreshControl, atIndex: 0)
+        //refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        //tableView.insertSubview(refreshControl, atIndex: 0)
         collectionView.insertSubview(refreshControl, atIndex: 0)
         
         
@@ -73,6 +73,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
                     self.filteredData = self.movies
                     self.tableView.reloadData()
                     self.collectionView.reloadData()
+                    print("filtered")
                    
                 }
                
@@ -130,6 +131,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let filteredData = filteredData {
 //            print(movies.count)
+            print(filteredData[0])
             return filteredData.count
         }else {
 //            print(0)
@@ -156,6 +158,7 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
         cell.titleLabel.text = title
         //cell.titleLabel.text = overview
         print("rendering")
+        print(filteredData[0])
         cell.pictureView.setImageWithURL(imageURL!)
         
         
@@ -173,12 +176,26 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UICollectio
             let title = dataString["title"] as! String
 
             return title.rangeOfString(searchText, options: .CaseInsensitiveSearch) != nil
+            
         })
         tableView.reloadData()
         collectionView.reloadData()
         }
     }
+    
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        self.searchBar.showsCancelButton = true
+    }
 
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        collectionView.reloadData()
+    }
+    
+   
+   
     
     func loadDataFromNetwork(refreshControl: UIRefreshControl) {
         
