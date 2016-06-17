@@ -11,29 +11,39 @@ import AFNetworking
 import MBProgressHUD
 
 
-class MoviesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
+class MoviesViewController: UIViewController, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    
     @IBOutlet weak var tableView: UITableView!
     
     var movies: [NSDictionary]?
+    var refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.dataSource = self
+        tableView.delegate = self
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
+        collectionView.insertSubview(refreshControl, atIndex: 0)
         
-        tableView.dataSource = self
-        tableView.delegate = self
-        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        
+        
+        
         let apiKey = "40b56d465d7ccfb7f58655052fce9189"
         let url = NSURL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        
+        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         let request = NSURLRequest(
             URL: url!,
             cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
             timeoutInterval: 10)
+        
+        MBProgressHUD.hideHUDForView(self.view, animated: true)
         
         let session = NSURLSession(
             configuration: NSURLSessionConfiguration.defaultSessionConfiguration(),
@@ -49,11 +59,14 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
                     
                     self.movies = responseDictionary["results"] as? [NSDictionary]
                     self.tableView.reloadData()
+                    self.collectionView.reloadData()
                 }
-                MBProgressHUD.hideHUDForView(self.view, animated: true)
+               
             }
         })
         task.resume()
+        
+
         
         // Do any additional setup after loading the view.
     }
@@ -99,10 +112,48 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         
     }
     
-    func loadDataFromNetwork() {
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let movies = movies {
+//            print(movies.count)
+            return movies.count
+        }else {
+//            print(0)
+            return 0
+        }
+    }
+    
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PosterCell", forIndexPath: indexPath) as! PosterCell
+        
+        let movie = movies![indexPath.row]
+        let title = movie["title"] as! String
+        let overview = movie["overview"] as! String
+        
+        let posterPath = movie["poster_path"] as! String
+        
+        
+        let baseURL = "http://image.tmdb.org/t/p/w500"
+        
+        let imageURL = NSURL(string: baseURL + posterPath)
+        
+        
+        cell.titleLabel.text = title
+        cell.titleLabel.text = overview
+        print("rendering")
+        cell.pictureView.setImageWithURL(imageURL!)
+        
+        
+        print("row\(indexPath.row)")
+        return cell
+        
+    }
+    
+    func loadDataFromNetwork(refreshControl: UIRefreshControl) {
         
         let apiKey = "40b56d465d7ccfb7f58655052fce9189"
         let url = NSURL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=\(apiKey)")
+        
         let myRequest = NSURLRequest(
             URL: url!,
             cachePolicy: NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData,
@@ -157,6 +208,11 @@ class MoviesViewController: UIViewController, UITableViewDataSource, UITableView
         });
         task.resume()
     }
+    
+   
+  
+    
+ 
     /*
      // MARK: - Navigation
      
